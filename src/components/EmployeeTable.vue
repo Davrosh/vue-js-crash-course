@@ -1,7 +1,6 @@
 <template>
   <div id="employee-table">
     <p v-if="employees.length < 1" class="empty-table">No employees</p>
-
     <table v-else>
       <thead>
         <tr>
@@ -10,24 +9,35 @@
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody v-for="employee in employees" v-bind:key="employee.id">
-        <tr>
-          <td v-if="editing===employee.id">
-            <input type="text" v-model="employee.name" />
-          </td>
-          <td v-else>{{employee.name}}</td>
-          <td v-if="editing===employee.id">
-            <input type="email" v-model="employee.email" />
-          </td>
-          <td v-else>{{employee.email}}</td>
-          <td v-if="editing===employee.id">
-            <button v-on:click="editEmployee(employee)">Save</button>
-            <button class="muted-button" v-on:click="cancelEdit(employee)">Cancel</button>
-          </td>
 
-          <td v-else>
+      <tbody v-for="employee in employees" v-bind:key="employee.id">
+        <tr v-show="editing===employee.id">
+          <td hidden>
+            <form v-bind:id="employee.id" v-on:submit.prevent="editEmployee(employee)"></form>
+          </td>
+          <td>
+            <input type="text" v-model="employee.name" v-bind:form="employee.id" />
+          </td>
+          <td>
+            <input type="email" v-model="employee.email" v-bind:form="employee.id" />
+          </td>
+          <td>
+            <button v-bind:form="employee.id">Save</button>
+            <button
+              class="muted-button"
+              v-on:click="cancelEdit(employee)"
+              v-bind:form="employee.id"
+            >Cancel</button>
+          </td>
+        </tr>
+
+        <tr v-show="editing!==employee.id">
+          <td>{{employee.name}}</td>
+          <td>{{employee.email}}</td>
+          <td>
             <button v-on:click="editMode(employee)">Edit</button>
-            <button v-on:click="$emit('delete:employee', employee.id)">Delete</button>
+            <button v-on:click="$emit('delete:employee',
+            employee.id)">Delete</button>
           </td>
         </tr>
       </tbody>

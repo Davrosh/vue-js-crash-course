@@ -63,9 +63,9 @@ export default {
     async editEmployee(id, editedEmployee) {
       try {
         const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users",
+          `https://jsonplaceholder.typicode.com/users/${id}`,
           {
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify(editedEmployee),
             headers: { "Content-type": "application/json; charset=UTF-8" }
           }
